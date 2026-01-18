@@ -60,7 +60,16 @@
       </div>
       <form id="note-form" class="note-form">
         <label for="note">レビュアーに見てほしい点</label>
-        <textarea id="note" name="note" rows="4" placeholder="例: 空入力時の新しいバリデーションを確認してください"></textarea>
+        <textarea
+          id="note"
+          name="note"
+          rows="4"
+          maxlength="220"
+          placeholder="例: 空入力時の新しいバリデーションを確認してください"></textarea>
+        <div class="note-hint-row">
+          <p class="note-hint">メモはブラウザに保存されます。クイックレビューのメモ取りに使ってください。</p>
+          <span id="note-count" class="note-count" aria-live="polite">0/220</span>
+        </div>
         <button type="submit" class="pill">メモを追加</button>
       </form>
       <ul id="notes" class="notes"></ul>
