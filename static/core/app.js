@@ -162,7 +162,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const entry = {
-      id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      id:
+        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
       text,
       createdAt: new Date().toISOString(),
     };
