@@ -1,0 +1,70 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRダッシュボード</title>
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+  <script defer src="{% static 'core/app.js' %}"></script>
+</head>
+<body>
+  <header class="page-header">
+    <div class="brand">
+      <div class="dot"></div>
+      <h1>PRダッシュボード</h1>
+    </div>
+    <p class="lede">開いているプルリクをさっと把握できるミニダッシュボード。</p>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">サーバーレンダリング</p>
+          <h2>レビュー待ち一覧</h2>
+        </div>
+        <button class="pill" id="refresh">APIから再取得</button>
+      </div>
+      <ul class="task-list" id="task-list">
+        {% for task in tasks %}
+        <li class="task">
+          <div>
+            <p class="task-title">{{ task.title }}</p>
+            <p class="task-meta">担当: {{ task.owner }} · 状態: {{ task.status }}</p>
+          </div>
+          <a class="task-link" href="{{ task.url }}">PRを開く</a>
+        </li>
+        {% empty %}
+        <li class="task empty">タスクはまだありません。</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">クライアントサイド</p>
+          <h2>メモを残す</h2>
+        </div>
+      </div>
+      <form id="note-form" class="note-form">
+        <label for="note">レビュアーに見てほしい点</label>
+        <textarea id="note" name="note" rows="4" placeholder="例: 空入力時の新しいバリデーションを確認してください"></textarea>
+        <button type="submit" class="pill">メモを追加</button>
+      </form>
+      <ul id="notes" class="notes"></ul>
+    </section>
+  </main>
+
+  <template id="task-template">
+    <li class="task">
+      <div>
+        <p class="task-title"></p>
+        <p class="task-meta"></p>
+      </div>
+      <a class="task-link" target="_blank" rel="noreferrer">PRを開く</a>
+    </li>
+  </template>
+</body>
+</html>
