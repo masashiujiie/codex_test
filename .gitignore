@@ -1,0 +1,17 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+
+# Environments
+.env
+.venv/
+env/
+venv/
+
+# Django static collection
+staticfiles/
+
+# OS files
+.DS_Store
