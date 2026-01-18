@@ -24,8 +24,18 @@
           <p class="eyebrow">サーバーレンダリング</p>
           <h2>レビュー待ち一覧</h2>
         </div>
-        <button class="pill" id="refresh">APIから再取得</button>
+        <div class="actions">
+          <label class="sr-only" for="status-filter">ステータスで絞り込む</label>
+          <select id="status-filter" class="select">
+            <option value="">すべてのステータス</option>
+            {% for status in statuses %}
+            <option value="{{ status }}">{{ status }}</option>
+            {% endfor %}
+          </select>
+          <button class="pill" id="refresh">APIから再取得</button>
+        </div>
       </div>
+      <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
       <ul class="task-list" id="task-list">
         {% for task in tasks %}
         <li class="task">
