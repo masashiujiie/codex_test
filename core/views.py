@@ -41,11 +41,16 @@ TASKS: Final[tuple[Task, ...]] = (
     ),
 )
 
+# タスクのステータス一覧を事前計算して再利用する
+STATUS_SET: Final[set[str]] = {task.status for task in TASKS}
+STATUSES: Final[tuple[str, ...]] = tuple(sorted(STATUS_SET))
+TASKS_BY_ID: Final[dict[str, Task]] = {task.pr_id: task for task in TASKS}  # ID検索をO(1)にする辞書
+ALLOWED_TASKS_API_PARAMS: Final[frozenset[str]] = frozenset({"status"})  # tasks_apiで受け付けるクエリパラメータをホワイトリスト化
+
 
 def index(request: HttpRequest) -> HttpResponse:
-    # トップページを表示。存在するステータス一覧を抽出してフィルターに渡す
-    statuses = sorted({task.status for task in TASKS})  # 全タスクからステータスを集め、重複排除したうえでソート
-    return render(request, "core/index.html", {"tasks": TASKS, "statuses": statuses})  # タスク一覧とフィルター候補をテンプレートへ渡す
+    # トップページを表示。事前計算済みのステータス一覧をフィルターに渡す
+    return render(request, "core/index.html", {"tasks": TASKS, "statuses": STATUSES})
 
 
 INFO_DESCRIPTION = (
@@ -67,7 +72,7 @@ def pr_info(request: HttpRequest) -> HttpResponse:
 
 def pr_detail(request: HttpRequest, pr_id: str) -> HttpResponse:
     # 指定されたIDのタスクを探し、見つかれば詳細を表示。なければ404ページを返す
-    task = next((task for task in TASKS if task.pr_id == pr_id), None)  # ID一致のタスクを1件返す（なければNone）
+    task = TASKS_BY_ID.get(pr_id)  # ID一致のタスクをO(1)で取得
     if not task:
         return render(
             request,
@@ -96,15 +101,24 @@ def pr_detail(request: HttpRequest, pr_id: str) -> HttpResponse:
 
 
 def tasks_api(request: HttpRequest) -> JsonResponse:
-    # GETクエリのstatusが許可された値かチェックし、必要ならフィルタしたリストを返す
-    allowed_statuses = {task.status for task in TASKS}  # 許可するステータス集合を生成
+    # GETクエリの許可パラメータを検証し、必要ならフィルタしたリストを返す
+    unknown_params = set(request.GET.keys()) - ALLOWED_TASKS_API_PARAMS  # 許可されていないパラメータを検出し早期リターン
+    if unknown_params:
+        return JsonResponse(
+            {
+                "error": f"Unknown parameters: {', '.join(sorted(unknown_params))}",  # 不許可のパラメータ名を列挙
+                "allowed_parameters": sorted(ALLOWED_TASKS_API_PARAMS),  # 許可リストを返してクライアントが修正しやすくする
+            },
+            status=400,
+        )
+
     status_filter = request.GET.get("status")  # クエリ文字列からステータス値を取得
 
-    if status_filter and status_filter not in allowed_statuses:
+    if status_filter and status_filter not in STATUS_SET:
         return JsonResponse(
             {
                 "error": f"Unknown status '{status_filter}'",  # 不正値のエラーメッセージ
-                "allowed_statuses": sorted(allowed_statuses),  # 許可リストも返してクライアントが修正しやすくする
+                "allowed_statuses": STATUSES,  # 許可リストも返してクライアントが修正しやすくする
             },
             status=400,
         )

@@ -33,12 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // メモ配列をlocalStorageへ保存する。失敗してもアプリは落とさない
+  // メモ配列をlocalStorageへ保存する。失敗時は呼び出し側でユーザー通知まで行う想定
   function persistNotes(notesToSave) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(notesToSave)); // 配列を文字列化して保存
     } catch (error) {
       console.warn("メモの保存に失敗しました", error); // 容量オーバーなどの例外を捕捉
+      throw error; // 呼び出し側でユーザー通知できるよう再送出
     }
   }
 
@@ -86,9 +87,14 @@ document.addEventListener("DOMContentLoaded", () => {
       deleteBtn.className = "note-delete"; // スタイル用クラス
       deleteBtn.textContent = "削除"; // ボタンラベル
       deleteBtn.addEventListener("click", () => {
-        savedNotes = savedNotes.filter((item) => item.id !== note.id); // 削除対象だけ除外
-        persistNotes(savedNotes); // 保存
-        renderNotes(); // 画面を再描画
+        try {
+          savedNotes = savedNotes.filter((item) => item.id !== note.id); // 削除対象だけ除外
+          persistNotes(savedNotes); // 保存（失敗すればcatchに伝播）
+          renderNotes(); // 画面を再描画
+          showFeedback("メモを削除しました。"); // 成功時のみユーザーに知らせる
+        } catch (error) {
+          showFeedback("メモの保存に失敗しました。ストレージ容量を確認してください。", true);
+        }
       });
 
       li.appendChild(wrapper); // 本文＋メタをliに追加
@@ -116,8 +122,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const body = await response.json(); // JSONへパース
 
       if (!response.ok) {
-        const detail = body?.error ? ` (${body.error})` : "";
-        throw new Error(`APIリクエストが失敗しました${detail}`);
+        const detail = body?.error || "不明なエラー";
+        console.error("API error detail:", detail); // 詳細はコンソールのみに出す
+        throw new Error("APIリクエストが失敗しました"); // ユーザー向けは汎用メッセージに固定
       }
 
       const { tasks } = body; // タスク配列を取り出す
@@ -186,12 +193,16 @@ document.addEventListener("DOMContentLoaded", () => {
       createdAt: new Date().toISOString(), // 保存時刻
     };
 
-    savedNotes = [entry, ...savedNotes].slice(0, 50); // 新しいメモを先頭に追加し最大50件に制限
-    persistNotes(savedNotes); // localStorageへ保存
-    renderNotes(); // 画面を更新
-    textarea.value = ""; // 入力欄をクリア
-    updateNoteCount(""); // カウンターをリセット
-    showFeedback("メモを保存しました。"); // 成功メッセージ
+    try {
+      savedNotes = [entry, ...savedNotes].slice(0, 50); // 新しいメモを先頭に追加し最大50件に制限
+      persistNotes(savedNotes); // localStorageへ保存（失敗時はcatchで通知）
+      renderNotes(); // 画面を更新
+      textarea.value = ""; // 入力欄をクリア
+      updateNoteCount(""); // カウンターをリセット
+      showFeedback("メモを保存しました。"); // 成功メッセージ
+    } catch (error) {
+      showFeedback("メモの保存に失敗しました。ストレージ容量を確認してください。", true);
+    }
   });
 
   // 入力しながら文字数カウンターを更新
