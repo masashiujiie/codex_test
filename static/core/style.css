@@ -1,3 +1,4 @@
+/* ページ全体で使う色や影のトークン */
 :root {
   --bg: #0f172a;
   --panel: #111827;
@@ -13,6 +14,7 @@
   box-sizing: border-box;
 }
 
+/* 背景のグラデーションと基本の余白設定 */
 body {
   margin: 0;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
@@ -51,18 +53,21 @@ body {
   box-shadow: 0 0 24px rgba(34, 211, 238, 0.8);
 }
 
+/* 見出し下の説明テキスト */
 .lede {
   margin: 0;
   color: var(--muted);
   max-width: 520px;
 }
 
+/* カード状レイアウトの基本 */
 .layout {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 16px;
 }
 
+/* パネル共通の見た目 */
 .panel {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -85,6 +90,7 @@ body {
   gap: 8px;
 }
 
+/* 小見出しや補足に使う細い文字 */
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -97,6 +103,7 @@ body {
   margin: 0;
 }
 
+/* ボタン風の丸いピル */
 .pill {
   border: 1px solid rgba(34, 211, 238, 0.4);
   background: rgba(34, 211, 238, 0.12);
@@ -129,6 +136,7 @@ body {
   color: var(--muted);
 }
 
+/* タスク一覧のカード配置 */
 .task-list {
   list-style: none;
   margin: 0;
@@ -138,6 +146,7 @@ body {
   gap: 10px;
 }
 
+/* 1件ごとのタスクカード */
 .task {
   background: var(--card);
   border: 1px solid var(--border);
@@ -170,6 +179,7 @@ body {
   text-decoration: underline;
 }
 
+/* メモ入力フォーム */
 .note-form {
   display: flex;
   flex-direction: column;
@@ -207,6 +217,7 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* 保存済みメモのリスト */
 .notes {
   list-style: none;
   margin: 12px 0 0;
@@ -260,12 +271,14 @@ body {
   color: var(--muted);
 }
 
+/* PR詳細ページのレイアウト補助 */
 .hero {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
+/* 注意書きリスト */
 .guidance {
   margin: 0;
   padding-left: 18px;
@@ -286,6 +299,7 @@ body {
   gap: 6px;
 }
 
+/* スクリーンリーダー用の隠しテキスト */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -298,6 +312,7 @@ body {
   border: 0;
 }
 
+/* モバイル向けの余白調整 */
 @media (max-width: 600px) {
   body {
     padding: 20px;

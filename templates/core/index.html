@@ -1,14 +1,10 @@
+{% extends "core/base.html" %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PRダッシュボード</title>
-  <link rel="stylesheet" href="{% static 'core/style.css' %}">
-  <script defer src="{% static 'core/app.js' %}"></script>
-</head>
-<body>
+
+{% block title %}PRダッシュボード{% endblock %}
+
+{% block content %}
+  <!-- ページ上部のタイトルとリード文 -->
   <header class="page-header">
     <div class="brand">
       <div class="dot"></div>
@@ -18,6 +14,7 @@
   </header>
 
   <main class="layout">
+    <!-- 左カラム: サーバーサイドでレンダリングしたタスク一覧 -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -51,6 +48,7 @@
       </ul>
     </section>
 
+    <!-- 右カラム: ブラウザだけで動くメモ機能 -->
     <section class="panel">
       <div class="panel-header">
         <div>
@@ -76,6 +74,7 @@
     </section>
   </main>
 
+  <!-- JSで複製して使うタスク表示用テンプレート -->
   <template id="task-template">
     <li class="task">
       <div>
@@ -85,5 +84,8 @@
       <a class="task-link" target="_blank" rel="noreferrer">PRを開く</a>
     </li>
   </template>
-</body>
-</html>
+{% endblock %}
+
+{% block scripts %}
+<script defer src="{% static 'core/app.js' %}"></script>
+{% endblock %}

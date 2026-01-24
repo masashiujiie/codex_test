@@ -1,40 +1,37 @@
-{% load static %}
-<!doctype html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="{% static 'core/style.css' %}">
-</head>
-<body>
-  <main class="layout" style="max-width: 720px; margin: 48px auto;">
-    <section class="panel">
-      <div class="panel-header">
-        <div>
-          <p class="eyebrow">PR プレビュー</p>
-          <h2 style="margin: 0;">{{ title }}</h2>
-        </div>
+{% extends "core/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<!-- 1カラムのシンプルなPR説明ページ -->
+<main class="layout" style="max-width: 720px; margin: 48px auto;">
+  <section class="panel">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">PR プレビュー</p>
+        <h2 style="margin: 0;">{{ title }}</h2>
       </div>
-      <div class="hero">
-        <p class="lede">{{ description }}</p>
-        {% if task %}
-        <div class="task-meta-card">
-          <p class="task-meta"><strong>PR ID:</strong> {{ task.pr_id }}</p>
-          <p class="task-meta"><strong>タイトル:</strong> {{ task.title }}</p>
-          <p class="task-meta"><strong>担当:</strong> {{ task.owner }} / <strong>状態:</strong> {{ task.status }}</p>
-        </div>
-        {% endif %}
-        <ul class="guidance">
-          <li>実際のプルリク内容は左の「PRダッシュボード」一覧から各PRリンクを開いて確認してください。</li>
-          <li>テストやスクリーンショットはPR本文に記載してください（テンプレに沿って埋めるとスムーズです）。</li>
-          <li>このページは動作確認用のサンプルで、機密情報や実運用データは含まれません。</li>
-        </ul>
-        {% if back_link %}
-        <a class="pill" href="/">ダッシュボードに戻る</a>
-        {% endif %}
+    </div>
+    <div class="hero">
+      <p class="lede">{{ description }}</p>
+      {% if task %}
+      <!-- デモ用タスク情報を表示（存在する場合のみ） -->
+      <div class="task-meta-card">
+        <p class="task-meta"><strong>PR ID:</strong> {{ task.pr_id }}</p>
+        <p class="task-meta"><strong>タイトル:</strong> {{ task.title }}</p>
+        <p class="task-meta"><strong>担当:</strong> {{ task.owner }} / <strong>状態:</strong> {{ task.status }}</p>
       </div>
-    </section>
-  </main>
-</body>
-</html>
+      {% endif %}
+      <!-- 実際のPR確認手順の案内 -->
+      <ul class="guidance">
+        <li>実際のプルリク内容は左の「PRダッシュボード」一覧から各PRリンクを開いて確認してください。</li>
+        <li>テストやスクリーンショットはPR本文に記載してください（テンプレに沿って埋めるとスムーズです）。</li>
+        <li>このページは動作確認用のサンプルで、機密情報や実運用データは含まれません。</li>
+      </ul>
+      {% if back_link %}
+      <a class="pill" href="/">ダッシュボードに戻る</a>
+      {% endif %}
+    </div>
+  </section>
+</main>
+{% endblock %}
