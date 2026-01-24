@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}PRダッシュボード{% endblock %}</title>
+  <!-- ページ固有タイトル + サイト名でタブを識別しやすくする -->
+  <title>{% block title %}PRダッシュボード{% endblock %} - Codex Test</title>
   <link rel="stylesheet" href="{% static 'core/style.css' %}">
   {% block head_extra %}{% endblock %}
 </head>
