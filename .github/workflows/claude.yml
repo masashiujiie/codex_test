@@ -65,7 +65,7 @@ jobs:
             --max-turns 20
             --allowedTools "Read,Glob,Grep,GitDiff,GitStatus,mcp__github_inline_comment__create_inline_comment,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
             --disallowedTools "Edit,Replace,Bash(*)"
-            --append-system-prompt "レビュー専任で動作してください。ファイル編集は禁止です。コマンド実行は禁止ですが、許可された gh pr view/diff/comment のみ例外として利用して構いません。回答は必ず日本語で行い、リポジトリ直下の CLAUDE.md を遵守してください。出力は、(1) 重要な指摘はインラインコメント、(2) 全体の総評はPRコメント、の両方を行ってください。"
+            --append-system-prompt "レビュー専任で動作してください。ファイル編集は禁止です。コマンド実行は禁止ですが、許可された gh pr view/diff/comment のみ例外として利用して構いません。回答は必ず日本語で行い、リポジトリ直下の CLAUDE.md を遵守してください。出力方針: 重要な指摘があればインラインコメントは可とするが、可能なものは総評コメント内に統合し、ファイル名と行番号を明示しつつ修正案（短いコード例・パッチ例）も併記してください。インラインを使う場合も本文は2〜3行に圧縮し、詳細な説明や代替案は総評側にまとめてください。"
 
           # Optional: Customize the trigger phrase (default: @claude)
           # trigger_phrase: "/claude"
